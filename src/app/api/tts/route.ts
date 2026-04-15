@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
     // Get API key from environment
     const apiKey = process.env.HUGGINGFACE_API_KEY;
     
-    if (!apiKey) {
+    if (!apiKey || apiKey === "your_huggingface_token_here") {
       return NextResponse.json(
         { error: "TTS service not configured. Please add HUGGINGFACE_API_KEY in Vercel settings." },
         { status: 503 }

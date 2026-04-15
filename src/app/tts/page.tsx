@@ -38,7 +38,7 @@ export default function TTSPage() {
     setIsSpeaking(true);
 
     try {
-      // Call API with Myanmar TTS model
+      // Try API first (for Myanmar TTS with facebook/mms-tts-mya)
       const response = await fetch("/api/tts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -48,32 +48,73 @@ export default function TTSPage() {
         }),
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
-        throw new Error(data.error || "Failed to generate speech");
+        const data = await response.json();
+        // If API returns 503 or no API key, fall back to browser TTS
+        if (response.status === 503 || data.error?.includes("not configured")) {
+          await useBrowserTTS(text);
+        } else {
+          throw new Error(data.error || "Failed to generate speech");
+        }
+      } else {
+        // Handle audio response from API
+        const audioBlob = await response.blob();
+        const audioUrl = URL.createObjectURL(audioBlob);
+
+        if (audioRef.current) {
+          audioRef.current.src = audioUrl;
+          audioRef.current.play();
+        }
+        
+        addWordCount(words);
+        setWordCount((prev) => prev + words);
+        setSuccess("Speech completed!");
+        setTimeout(() => setSuccess(""), 3000);
       }
-
-      // Handle audio response - the API returns audio directly as binary
-      const audioBlob = await response.blob();
-      const audioUrl = URL.createObjectURL(audioBlob);
-
-      if (audioRef.current) {
-        audioRef.current.src = audioUrl;
-        audioRef.current.play();
-      }
-
-      addWordCount(words);
-      setWordCount((prev) => prev + words);
-      setSuccess("Speech completed!");
-      setTimeout(() => setSuccess(""), 3000);
     } catch (e: any) {
       console.error("TTS error:", e);
-      setError(e.message || "Failed to speak. Please try again.");
+      // Fall back to browser Web Speech API
+      await useBrowserTTS(text);
     } finally {
       setIsApiLoading(false);
       setIsSpeaking(false);
     }
+  };
+
+  // Fallback to browser Web Speech API
+  const useBrowserTTS = async (txt: string) => {
+    if (!("speechSynthesis" in window)) {
+      setError("Browser does not support text-to-speech");
+      return;
+    }
+
+    const profile = voiceProfiles.find((v) => v.id === selectedVoice) || voiceProfiles[0];
+    const utterance = new SpeechSynthesisUtterance(txt);
+    
+    // Try to find a Myanmar voice
+    const voices = window.speechSynthesis.getVoices();
+    const myanmarVoice = voices.find(v => v.lang.startsWith("my"));
+    
+    if (myanmarVoice) {
+      utterance.voice = myanmarVoice;
+    }
+    
+    utterance.lang = profile.lang;
+    utterance.pitch = profile.pitch;
+    utterance.rate = profile.rate;
+
+    utterance.onend = () => {
+      addWordCount(txt.split(/\s+/).length);
+      setWordCount((prev) => prev + txt.split(/\s+/).length);
+      setSuccess("Speech completed!");
+      setTimeout(() => setSuccess(""), 3000);
+    };
+
+    utterance.onerror = (e) => {
+      setError("Failed to speak. Please try again.");
+    };
+
+    window.speechSynthesis.speak(utterance);
   };
 
   const handleStop = () => {
