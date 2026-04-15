@@ -81,14 +81,14 @@ export default function TTSPage() {
         <div className="glass-card p-4 mb-6">
           <div className="flex items-center justify-between">
             <span className="text-gray-300">Daily Usage</span>
-            <span className={`font-bold ${wordCount >= DAILY_WORD_LIMIT ? "text-red-400" : "text-purple-400"}`}>
+            <span className={`font-bold ${wordCount >= DAILY_WORD_LIMIT ? "text-red-400" : "text-gray-400"}`}>
               {wordCount} / {DAILY_WORD_LIMIT} words
             </span>
           </div>
           <div className="w-full h-2 bg-white/10 rounded-full mt-2 overflow-hidden">
             <div
               className={`h-full rounded-full transition-all ${
-                wordCount >= DAILY_WORD_LIMIT ? "bg-red-500" : "bg-gradient-to-r from-purple-500 to-indigo-500"
+                wordCount >= DAILY_WORD_LIMIT ? "bg-red-500" : "bg-gradient-to-r from-gray-500 to-gray-700"
               }`}
               style={{ width: `${Math.min((wordCount / DAILY_WORD_LIMIT) * 100, 100)}%` }}
             />
@@ -104,12 +104,12 @@ export default function TTSPage() {
                 onClick={() => setSelectedVoice(voice.id)}
                 className={`p-4 rounded-xl transition-all ${
                   selectedVoice === voice.id
-                    ? "bg-purple-600/30 border-2 border-purple-500"
+                    ? "bg-gray-600/30 border-2 border-gray-500"
                     : "glass hover:bg-white/10"
                 }`}
               >
                 <Volume2 className={`w-6 h-6 mx-auto mb-2 ${
-                  selectedVoice === voice.id ? "text-purple-400" : "text-gray-400"
+                  selectedVoice === voice.id ? "text-gray-400" : "text-gray-400"
                 }`} />
                 <p className="font-medium text-white text-sm">{voice.name}</p>
               </button>
@@ -123,7 +123,7 @@ export default function TTSPage() {
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Type or paste your text here..."
-            className="w-full h-48 bg-black/20 rounded-xl p-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
+            className="w-full h-48 bg-black/20 rounded-xl p-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 resize-none"
           />
           <p className="text-gray-500 text-sm mt-2">
             {text.trim().split(/\s+/).filter(Boolean).length} words
@@ -156,7 +156,7 @@ export default function TTSPage() {
             <button
               onClick={handleSpeak}
               disabled={!text.trim() || wordCount >= DAILY_WORD_LIMIT}
-              className="glass-button flex-1 flex items-center justify-center gap-2 bg-purple-600/30 hover:bg-purple-600/50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="glass-button flex-1 flex items-center justify-center gap-2 bg-gray-600/30 hover:bg-gray-600/50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Play className="w-5 h-5" />
               Speak
@@ -165,7 +165,7 @@ export default function TTSPage() {
           <button
             onClick={handleDownload}
             disabled={!text.trim()}
-            className="glass-button flex items-center justify-center gap-2 bg-indigo-600/30 hover:bg-indigo-600/50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="glass-button flex items-center justify-center gap-2 bg-gray-900/30 hover:bg-gray-900/50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Download className="w-5 h-5" />
           </button>

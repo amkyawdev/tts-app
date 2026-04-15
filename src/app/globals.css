@@ -3,15 +3,9 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-.dark {
   --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 0, 0, 0;
-  --background-end-rgb: 10, 10, 20;
+  --background-start-rgb: 10, 10, 15;
+  --background-end-rgb: 20, 20, 25;
 }
 
 body {
@@ -27,15 +21,10 @@ body {
 
 /* Glassmorphism Utility Classes */
 .glass {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.dark .glass {
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(128, 128, 128, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(100, 100, 100, 0.3);
 }
 
 .glass-card {
@@ -47,11 +36,7 @@ body {
 }
 
 .glass-button:hover {
-  @apply bg-white/20 shadow-lg;
-}
-
-.dark .glass-button:hover {
-  @apply bg-white/10;
+  @apply bg-gray-500/30 shadow-lg;
 }
 
 /* Sidebar Styles */
@@ -75,20 +60,20 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-purple-500/50 rounded-full;
+  @apply bg-gray-500/50 rounded-full;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-purple-500;
+  @apply bg-gray-400;
 }
 
 /* Animations */
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+    box-shadow: 0 0 20px rgba(128, 128, 128, 0.3);
   }
   50% {
-    box-shadow: 0 0 40px rgba(139, 92, 246, 0.6);
+    box-shadow: 0 0 40px rgba(128, 128, 128, 0.6);
   }
 }
 

@@ -58,7 +58,7 @@ export default function Header() {
           <p className="text-xs text-gray-400">Daily Limit</p>
           <div className="w-24 h-2 bg-white/10 rounded-full mt-1 overflow-hidden">
             <div 
-              className="h-full bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full transition-all duration-500"
+              className="h-full bg-gradient-to-r from-gray-500 to-gray-700 rounded-full transition-all duration-500"
               style={{ width: `${Math.min((wordCount / 1800) * 100, 100)}%` }}
             />
           </div>
@@ -78,7 +78,7 @@ export default function Header() {
         </button>
 
         {/* User avatar */}
-        <button className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center shadow-lg">
+        <button className="w-10 h-10 rounded-xl bg-gradient-to-br from-gray-600 to-gray-900 flex items-center justify-center shadow-lg">
           <User className="w-5 h-5" />
         </button>
       </div>

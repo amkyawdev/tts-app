@@ -49,7 +49,7 @@ export default function SettingsPage() {
               href="https://huggingface.co/settings/tokens"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-purple-400 hover:text-purple-300"
+              className="text-gray-400 hover:text-gray-300"
             >
               <ExternalLink className="w-4 h-4" />
             </a>
@@ -66,11 +66,11 @@ export default function SettingsPage() {
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
               placeholder="Enter Hugging Face API Key"
-              className="flex-1 bg-black/20 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="flex-1 bg-black/20 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500"
             />
             <button
               onClick={handleSaveApiKey}
-              className="glass-button flex items-center gap-2 bg-purple-600/30 hover:bg-purple-600/50"
+              className="glass-button flex items-center gap-2 bg-gray-600/30 hover:bg-gray-600/50"
             >
               <Save className="w-5 h-5" />
               Save
@@ -91,7 +91,7 @@ export default function SettingsPage() {
           <div className="flex items-center justify-between mb-4">
             <div>
               <p className="text-gray-300">Words used today</p>
-              <p className="text-3xl font-bold text-purple-400">{wordCount}</p>
+              <p className="text-3xl font-bold text-gray-400">{wordCount}</p>
             </div>
             <div className="text-right">
               <p className="text-gray-300">Daily limit</p>
@@ -111,7 +111,7 @@ export default function SettingsPage() {
         {/* About */}
         <div className="glass-card p-6">
           <div className="flex items-center gap-2 mb-4">
-            <Info className="w-5 h-5 text-purple-400" />
+            <Info className="w-5 h-5 text-gray-400" />
             <h2 className="text-lg font-semibold text-white">About</h2>
           </div>
           

@@ -99,7 +99,7 @@ export default function StoryPage() {
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
             placeholder="Enter your story topic (e.g., 'a magical dragon')"
-            className="w-full bg-black/20 rounded-xl p-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full bg-black/20 rounded-xl p-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500"
           />
         </div>
 
@@ -113,7 +113,7 @@ export default function StoryPage() {
                 onClick={() => setSelectedVoice(voice.id)}
                 className={`p-4 rounded-xl transition-all ${
                   selectedVoice === voice.id
-                    ? "bg-purple-600/30 border-2 border-purple-500"
+                    ? "bg-gray-600/30 border-2 border-gray-500"
                     : "glass hover:bg-white/10"
                 }`}
               >
@@ -141,7 +141,7 @@ export default function StoryPage() {
         <button
           onClick={generateStory}
           disabled={isGenerating || !topic.trim()}
-          className="glass-button w-full flex items-center justify-center gap-2 bg-purple-600/30 hover:bg-purple-600/50 disabled:opacity-50 mb-8"
+          className="glass-button w-full flex items-center justify-center gap-2 bg-gray-600/30 hover:bg-gray-600/50 disabled:opacity-50 mb-8"
         >
           {isGenerating ? (
             <>
@@ -163,7 +163,7 @@ export default function StoryPage() {
             {storyParts.map((part, index) => (
               <div key={index} className="glass-card p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-purple-400">{part.title}</h3>
+                  <h3 className="text-lg font-semibold text-gray-400">{part.title}</h3>
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleSpeak(part.content)}

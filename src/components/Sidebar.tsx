@@ -52,7 +52,7 @@ export default function Sidebar() {
       >
         {/* Logo */}
         <div className="flex items-center gap-3 p-4 border-b border-white/10">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center shadow-lg">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-gray-600 to-gray-900 flex items-center justify-center shadow-lg">
             <Sparkles className="w-5 h-5 text-white" />
           </div>
           {isExpanded && (
@@ -84,12 +84,12 @@ export default function Sidebar() {
                 className={`
                   mx-2 flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200
                   ${isActive 
-                    ? "bg-purple-600/30 text-purple-300 shadow-lg shadow-purple-500/20" 
+                    ? "bg-gray-600/30 text-gray-300 shadow-lg shadow-gray-500/20" 
                     : "text-gray-400 hover:bg-white/10 hover:text-white"
                   }
                 `}
               >
-                <Icon className={`w-5 h-5 flex-shrink-0 ${isActive ? "text-purple-400" : ""}`} />
+                <Icon className={`w-5 h-5 flex-shrink-0 ${isActive ? "text-gray-400" : ""}`} />
                 {isExpanded && <span className="whitespace-nowrap">{item.label}</span>}
               </Link>
             );
@@ -99,7 +99,7 @@ export default function Sidebar() {
         {/* Theme toggle (bottom) */}
         <div className="p-4 border-t border-white/10">
           {!isExpanded && (
-            <div className="w-10 h-10 mx-auto rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
+            <div className="w-10 h-10 mx-auto rounded-xl bg-gradient-to-br from-gray-600 to-gray-900 flex items-center justify-center">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
           )}
