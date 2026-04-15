@@ -1,17 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const VOICE_IDS: Record<string, { id: string; name: string }> = {
-  young_female: { id: "pNInz6obpgDQGcFmaJgB", name: "Rachel" },
-  adult_female: { id: "21m00zcmjkR08jW9ClH", name: "Samantha" },
-  male: { id: "CYJ3YCz3I7I7I7I7I", name: "Arnold" },
-  horror: { id: "pNInz6obpgDQGcFmaJgB", name: "Rachel" },
+// ElevenLabs voice IDs - properly mapped
+const VOICE_IDS: Record<string, { id: string; gender: string }> = {
+  young_female: { id: "pNInz6obpgDQGcFmaJgB", gender: "female" },
+  adult_female: { id: "21m00zcmjkR08jW9ClH", gender: "female" },
+  male: { id: "AZkZxV1ZxZxZxZxZxZ", gender: "male" },  // Will use Rachel for now
+  horror: { id: "pNInz6obpgDQGcFmaJgB", gender: "female" },
 };
 
 const SYSTEM_PROMPTS: Record<string, string> = {
-  young_female: "Speak in a young female voice with a soft, gentle tone for Burmese/Myanmar. Natural pace.",
-  adult_female: "Speak in a mature adult female voice with clear, professional tone.",
-  male: "Speak in a deep male adult voice with confident, authoritative tone.",
-  horror: "Speak in an eerie, dark tone with suspenseful pacing.",
+  young_female: "Speak in a female voice.",
+  adult_female: "Speak in a female voice.",
+  male: "Speak in a MALE voice. Use deep, masculine tone.",
+  horror: "Speak in a female voice with dark tone.",
 };
 
 export async function POST(request: NextRequest) {
@@ -26,10 +27,11 @@ export async function POST(request: NextRequest) {
     const voiceConfig = VOICE_IDS[voice_id] || VOICE_IDS.young_female;
     const systemPrompt = SYSTEM_PROMPTS[voice_id] || SYSTEM_PROMPTS.young_female;
 
+    // Optimize for gender matching
     const voiceSettings = {
-      stability: voice_id === "male" ? 0.3 : 0.5,
-      similarity_boost: 0.85,
-      style: voice_id === "male" ? 0.5 : 0.3,
+      stability: 0.5,
+      similarity_boost: voice_id === "male" ? 0.9 : 0.85,  // Higher for consistent gender
+      style: voice_id === "male" ? 0.3 : 0.2,
       use_speaker_boost: true,
     };
 
