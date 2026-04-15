@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get API key from environment
-    const apiKey = process.env.HUGGINGFACE_API_KEY;
+    const apiKey = process.env.HF_TOKEN;
     
     if (!apiKey || apiKey === "your_huggingface_token_here") {
       return NextResponse.json(
