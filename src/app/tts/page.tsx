@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Play, Square, Download, Volume2, AlertCircle, Check } from "lucide-react";
-import { speak, voiceProfiles, getWordCount, addWordCount, DAILY_WORD_LIMIT } from "@/lib/tts";
+import { useState, useEffect, useRef } from "react";
+import { Play, Square, Download, Volume2, AlertCircle, Check, Loader2 } from "lucide-react";
+import { voiceProfiles, getWordCount, addWordCount, DAILY_WORD_LIMIT } from "@/lib/tts";
 
 export default function TTSPage() {
   const [text, setText] = useState("");
@@ -11,6 +11,8 @@ export default function TTSPage() {
   const [wordCount, setWordCount] = useState(0);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [isApiLoading, setIsApiLoading] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     const { count } = getWordCount();
@@ -32,26 +34,55 @@ export default function TTSPage() {
     }
 
     setError("");
+    setIsApiLoading(true);
     setIsSpeaking(true);
 
     try {
-      const profile = voiceProfiles.find((v) => v.id === selectedVoice) || voiceProfiles[0];
-      await speak(text, profile);
+      // Call API with Myanmar TTS model
+      const response = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: text.trim(),
+          voice_id: selectedVoice,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to generate speech");
+      }
+
+      // Handle audio response - the API returns audio directly as binary
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+
+      if (audioRef.current) {
+        audioRef.current.src = audioUrl;
+        audioRef.current.play();
+      }
+
       addWordCount(words);
       setWordCount((prev) => prev + words);
       setSuccess("Speech completed!");
       setTimeout(() => setSuccess(""), 3000);
-    } catch (e) {
-      setError("Failed to speak. Please try again.");
-      console.error(e);
+    } catch (e: any) {
+      console.error("TTS error:", e);
+      setError(e.message || "Failed to speak. Please try again.");
+    } finally {
+      setIsApiLoading(false);
+      setIsSpeaking(false);
     }
-
-    setIsSpeaking(false);
   };
 
   const handleStop = () => {
-    window.speechSynthesis?.cancel();
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
     setIsSpeaking(false);
+    setIsApiLoading(false);
   };
 
   const handleDownload = () => {
@@ -75,8 +106,11 @@ export default function TTSPage() {
       <div className="max-w-3xl mx-auto">
         <h1 className="text-2xl font-bold text-white mb-2">Text to Speech</h1>
         <p className="text-gray-400 mb-6">
-          Convert your text to natural voice using 4 different voice profiles
+          Convert your text to natural voice using facebook/mms-tts-mya model
         </p>
+
+        {/* Hidden audio element */}
+        <audio ref={audioRef} className="hidden" />
 
         <div className="glass-card p-4 mb-6">
           <div className="flex items-center justify-between">
@@ -98,7 +132,7 @@ export default function TTSPage() {
         <div className="glass-card p-6 mb-6">
           <h2 className="text-lg font-semibold text-white mb-4">Select Voice Profile</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {voiceProfiles.map((voice) => (
+            {voiceProfiles.slice(0, 4).map((voice) => (
               <button
                 key={voice.id}
                 onClick={() => setSelectedVoice(voice.id)}
@@ -122,7 +156,7 @@ export default function TTSPage() {
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Type or paste your text here..."
+            placeholder="Enter text in Myanmar Unicode or English..."
             className="w-full h-48 bg-black/20 rounded-xl p-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 resize-none"
           />
           <p className="text-gray-500 text-sm mt-2">
@@ -155,11 +189,20 @@ export default function TTSPage() {
           ) : (
             <button
               onClick={handleSpeak}
-              disabled={!text.trim() || wordCount >= DAILY_WORD_LIMIT}
+              disabled={!text.trim() || wordCount >= DAILY_WORD_LIMIT || isApiLoading}
               className="glass-button flex-1 flex items-center justify-center gap-2 bg-gray-600/30 hover:bg-gray-600/50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <Play className="w-5 h-5" />
-              Speak
+              {isApiLoading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                <>
+                  <Play className="w-5 h-5" />
+                  Speak
+                </>
+              )}
             </button>
           )}
           <button
